@@ -10,7 +10,7 @@ public class ModelUtil
         return true;
     }
 
-    public static int UseModel()
+    public static int UseModel(ImmoItemModelDto immoItem)
     {
         MLContext mlContext = new();
 
@@ -18,18 +18,10 @@ public class ModelUtil
             mlContext.Model.Load("D:\\DotNetProjects10\\Immoa\\Immoa.Running\\bin\\Debug\\net10.0\\ImmoModel.zip",
             out _);
 
-        var predictEngine = mlContext.Model.CreatePredictionEngine<ImmoItemData, BaseRentPredict>(trainedModel);
+        var predictEngine = mlContext.Model.CreatePredictionEngine<ImmoItemModelDto, BaseRentPredict>(trainedModel);
 
-        var predictResult = predictEngine.Predict(new ImmoItemData
-        {
-            GeoPlz = 68169,
-            Lift = false, 
-            Balcony = true,
-        });
+        var predict1Result = predictEngine.Predict(immoItem);
 
-        Console.WriteLine($"Predicted Base Rent: {Convert.ToInt32(predictResult.BaseRent).ToString("n0")}");
-
-
-        return Convert.ToInt32(predictResult.BaseRent);
+        return Convert.ToInt32(predict1Result.BaseRent);
     }
 }
