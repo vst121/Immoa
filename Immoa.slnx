@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Immoa.Running/Immoa.Running.csproj" />
+  <Project Path="Immoa.Training/Immoa.Training.csproj" />
+</Solution>
