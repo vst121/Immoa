@@ -12,13 +12,51 @@ public class ModelTrainer
         var dataView = mlContext.Data.LoadFromEnumerable(data);
 
         var pipeline = mlContext.Transforms.Categorical
-            .OneHotEncoding("Regio1Encoded", "Regio1")
-            .Append(mlContext.Transforms.NormalizeMinMax("BaseRentNormalized", nameof(ImmoItemData.BaseRent)))
+            .OneHotEncoding($"{nameof(ImmoItemData.Regio1)}Encoded", nameof(ImmoItemData.Regio1))
+            .Append(mlContext.Transforms.NormalizeMinMax($"{nameof(ImmoItemData.BaseRent)}Normalized", nameof(ImmoItemData.BaseRent)))
             .Append(mlContext.Transforms.Conversion
-                .ConvertType("GeoPlzConverted", nameof(ImmoItemData.GeoPlz), outputKind: Microsoft.ML.Data.DataKind.Single))
+                .ConvertType($"{nameof(ImmoItemData.NewlyConst)}Converted", nameof(ImmoItemData.NewlyConst), outputKind: Microsoft.ML.Data.DataKind.Single))
             .Append(mlContext.Transforms.Conversion
-                .ConvertType("LiftConverted", nameof(ImmoItemData.Lift), outputKind: Microsoft.ML.Data.DataKind.Single))
-            .Append(mlContext.Transforms.Concatenate("Features", "BaseRentNormalized", "GeoPlzConverted"))
+                .ConvertType($"{nameof(ImmoItemData.Balcony)}Converted", nameof(ImmoItemData.Balcony), outputKind: Microsoft.ML.Data.DataKind.Single))
+            .Append(mlContext.Transforms.Conversion
+                .ConvertType($"{nameof(ImmoItemData.HasKitchen)}Converted", nameof(ImmoItemData.HasKitchen), outputKind: Microsoft.ML.Data.DataKind.Single))
+            .Append(mlContext.Transforms.Conversion
+                .ConvertType($"{nameof(ImmoItemData.Cellar)}Converted", nameof(ImmoItemData.Cellar), outputKind: Microsoft.ML.Data.DataKind.Single))
+            .Append(mlContext.Transforms.Conversion
+                .ConvertType($"{nameof(ImmoItemData.Garden)}Converted", nameof(ImmoItemData.Garden), outputKind: Microsoft.ML.Data.DataKind.Single))
+           
+            .Append(mlContext.Transforms.Concatenate("Features",
+                $"{nameof(ImmoItemData.BaseRent)}Normalized",
+                //nameof(ImmoItemData.Regio1),
+                //nameof(ImmoItemData.Regio2),
+                //nameof(ImmoItemData.Regio3),
+                //nameof(ImmoItemData.StreetPlain),
+                nameof(ImmoItemData.ServiceCharge),
+                //nameof(ImmoItemData.HeatingType),
+                $"{nameof(ImmoItemData.NewlyConst)}Converted",
+                //nameof(ImmoItemData.YearConstructed),
+                //nameof(ImmoItemData.LastRefurbish),
+                nameof(ImmoItemData.LivingSpace),
+                $"{nameof(ImmoItemData.Balcony)}Converted",
+                nameof(ImmoItemData.Pricetrend),
+                nameof(ImmoItemData.TotalRent),
+                //nameof(ImmoItemData.NoParkSpaces),
+                //nameof(ImmoItemData.FiringTypes),
+                $"{nameof(ImmoItemData.HasKitchen)}Converted",
+                $"{nameof(ImmoItemData.Cellar)}Converted",
+                //nameof(ImmoItemData.PetsAllowed),
+                //nameof(ImmoItemData.TypeOfFlat),
+                nameof(ImmoItemData.NoRooms),
+                //nameof(ImmoItemData.Floor),
+                //nameof(ImmoItemData.NumberOfFloors),
+                $"{nameof(ImmoItemData.Garden)}Converted",
+                nameof(ImmoItemData.ThermalChar)
+                //nameof(ImmoItemData.HeatingCosts),
+                //nameof(ImmoItemData.EnergyEfficiencyClass),
+                //nameof(ImmoItemData.ElectricityBasePrice),
+                //nameof(ImmoItemData.Condition)
+                ))
+
             .Append(mlContext.Transforms.CopyColumns("Label", nameof(ImmoItemData.BaseRent)))
             .Append(mlContext.Regression.Trainers.FastTree());
 
