@@ -4,7 +4,6 @@ ModelUtil.TrainModel();
 var dto1 = new ImmoItemModelDto
 {
     Regio1 = "Hessen",
-    GeoPlz = 60438,
     Lift = true,
     Balcony = true,
     NoRooms = 4

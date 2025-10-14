@@ -1,0 +1,163 @@
+@page "/immodataoverview"
+@rendermode InteractiveServer
+
+<PageTitle>Immo Data Overview</PageTitle>
+
+<h1>Immo Data Hierarchical Overview</h1>
+
+@if (allData == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div>
+        <h3>Regio1</h3>
+        <ul>
+            @foreach (var regio1 in regio1List)
+            {
+                <li>
+                    <button class="btn btn-link" @onclick="() => SelectRegio1(regio1)">
+                        @regio1
+                    </button>
+                </li>
+            }
+        </ul>
+    </div>
+
+    @if (selectedRegio1 != null)
+    {
+        <div>
+            <h4>Regio2 in @selectedRegio1</h4>
+            <ul>
+                @foreach (var regio2 in regio2List)
+                {
+                    <li>
+                        <button class="btn btn-link" @onclick="() => SelectRegio2(regio2)">
+                            @regio2
+                        </button>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (selectedRegio2 != null)
+    {
+        <div>
+            <h5>Regio3 in @selectedRegio2</h5>
+            <ul>
+                @foreach (var regio3 in regio3List)
+                {
+                    <li>
+                        <button class="btn btn-link" @onclick="() => SelectRegio3(regio3)">
+                            @regio3
+                        </button>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (selectedRegio3 != null)
+    {
+        <div>
+            <h6>Summary for @selectedRegio1 / @selectedRegio2 / @selectedRegio3</h6>
+            @if (finalData != null)
+            {
+                <p>Ad Count: @finalData.AdCount</p>
+                <p>Rent Min Price: @finalData.BaseRentMinPrice</p>
+                <p>Rent Max Price: @finalData.BaseRentMaxPrice</p>
+            }
+            else
+            {
+                <p>No data found.</p>
+            }
+        </div>
+    }
+}
+
+@code {
+    private List<ImmoItemData>? allData;
+    private List<string> regio1List = new();
+    private List<string> regio2List = new();
+    private List<string> regio3List = new();
+
+    private string? selectedRegio1;
+    private string? selectedRegio2;
+    private string? selectedRegio3;
+
+    private DistilledImmoData? finalData;
+
+    protected override void OnInitialized()
+    {
+        var manager = new DataManager();
+        allData = manager.LoadAllData().ToList();
+
+        regio1List = allData.Select(x => x.Regio1).Distinct().OrderBy(x => x).ToList();
+    }
+
+    private void SelectRegio1(string regio1)
+    {
+        selectedRegio1 = regio1;
+        selectedRegio2 = null;
+        selectedRegio3 = null;
+        finalData = null;
+
+        regio2List = allData!
+            .Where(x => x.Regio1 == regio1)
+            .Select(x => x.Regio2)
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+    }
+
+    private void SelectRegio2(string regio2)
+    {
+        selectedRegio2 = regio2;
+        selectedRegio3 = null;
+        finalData = null;
+
+        regio3List = allData!
+            .Where(x => x.Regio1 == selectedRegio1 && x.Regio2 == regio2)
+            .Select(x => x.Regio3)
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+    }
+
+    private void SelectRegio3(string regio3)
+    {
+        selectedRegio3 = regio3;
+
+        var filtered = allData!
+            .Where(x => x.Regio1 == selectedRegio1 && x.Regio2 == selectedRegio2 && x.Regio3 == regio3);
+
+        if (filtered.Any())
+        {
+            finalData = new DistilledImmoData
+            {
+                Regio1 = selectedRegio1!,
+                Regio2 = selectedRegio2!,
+                Regio3 = regio3,
+                AdCount = filtered.Count(),
+                BaseRentMinPrice = filtered.Min(x => x.BaseRent),
+                BaseRentMaxPrice = filtered.Max(x => x.BaseRent)
+            };
+        }
+        else
+        {
+            finalData = null;
+        }
+    }
+
+    public class DistilledImmoData
+    {
+        public string Regio1 { get; set; } = string.Empty;
+        public string Regio2 { get; set; } = string.Empty;
+        public string Regio3 { get; set; } = string.Empty;
+        public int AdCount { get; set; }
+        public float BaseRentMinPrice { get; set; }
+        public float BaseRentMaxPrice { get; set; }
+    }
+}

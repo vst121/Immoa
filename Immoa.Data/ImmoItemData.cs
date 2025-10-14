@@ -1,4 +1,4 @@
-namespace Immoa.Training;
+namespace Immoa.Data;
 
 public class ImmoItemData
 {

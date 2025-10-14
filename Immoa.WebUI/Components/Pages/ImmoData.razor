@@ -1,0 +1,214 @@
+@page "/immodata"
+@rendermode InteractiveServer
+
+@using Immoa.Data
+
+<PageTitle>ImmoData</PageTitle>
+
+<h1>Immo Data</h1>
+
+@if (pagedData == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="mb-3">
+        <label>Regio1</label>
+        <select class="form-select" @onchange="OnRegio1Changed">
+            <option value="">All</option>
+            @foreach (var r in regio1List)
+            {
+                <option value="@r">@r</option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Regio2</label>
+        <select class="form-select" @onchange="OnRegio2Changed">
+            <option value="">All</option>
+            @foreach (var r in regio2List)
+            {
+                <option value="@r">@r</option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Regio3</label>
+        <select class="form-select" @onchange="OnRegio3Changed">
+            <option value="">All</option>
+            @foreach (var r in regio3List)
+            {
+                <option value="@r">@r</option>
+            }
+        </select>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ScoutId</th>
+                <th>Regio1</th>
+                <th>Regio2</th>
+                <th>Regio3</th>
+                <th>GeoPlz</th>
+                <th>ServiceCharge</th>
+                <th>LivingSpace</th>
+                <th>BaseRent</th>
+                <th>NoRooms</th>
+                <th>Balcony</th>
+                <th>Lift</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in pagedData)
+            {
+                <tr>
+                    <td>@item.ScoutId</td>
+                    <td>@item.Regio1</td>
+                    <td>@item.Regio2</td>
+                    <td>@item.Regio3</td>
+                    <td>@item.GeoPlz</td>
+                    <td>@item.ServiceCharge</td>
+                    <td>@item.LivingSpace</td>
+                    <td>@item.BaseRent</td>
+                    <td>@item.NoRooms</td>
+                    <td>@item.Balcony</td>
+                    <td>@item.Lift</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                <button class="page-link" @onclick="PrevPage">Previous</button>
+            </li>
+            <li class="page-item @(currentPage == 1 ? "active" : "")">
+                <button class="page-link" @onclick="() => GoToPage(1)">1</button>
+            </li>
+            @if (currentPage > 2 && totalPages > 3)
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            }
+            @if (currentPage > 1 && currentPage < totalPages)
+            {
+                <li class="page-item active">
+                    <span class="page-link">@currentPage</span>
+                </li>
+            }
+            @if (currentPage < totalPages - 1 && totalPages > 3)
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            }
+            @if (totalPages > 1)
+            {
+                <li class="page-item @(currentPage == totalPages ? "active" : "")">
+                    <button class="page-link" @onclick="() => GoToPage(totalPages)">@totalPages</button>
+                </li>
+            }
+            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                <button class="page-link" @onclick="NextPage">Next</button>
+            </li>
+        </ul>
+    </nav>
+}
+
+@code {
+    private List<ImmoItemData>? allData;
+    private IEnumerable<ImmoItemData>? pagedData;
+    private int currentPage = 1;
+    private int pageSize = 10;
+    private int totalPages = 1;
+
+    private List<string> regio1List = new();
+    private List<string> regio2List = new();
+    private List<string> regio3List = new();
+
+    private string? selectedRegio1;
+    private string? selectedRegio2;
+    private string? selectedRegio3;
+
+    private DataManager manager = new();
+
+    protected override void OnInitialized()
+    {
+        allData = manager.LoadAllData().ToList();
+        regio1List = manager.GetRegio1List();
+        regio2List = manager.GetRegio2List();
+        regio3List = manager.GetRegio3List();
+        totalPages = Math.Max(1, (int)Math.Ceiling((double)allData.Count / pageSize));
+        UpdatePagedData();
+    }
+
+    private void UpdatePagedData()
+    {
+        if (allData == null) return;
+        var filtered = allData.AsEnumerable();
+        if (!string.IsNullOrWhiteSpace(selectedRegio1))
+            filtered = filtered.Where(x => x.Regio1 == selectedRegio1);
+        if (!string.IsNullOrWhiteSpace(selectedRegio2))
+            filtered = filtered.Where(x => x.Regio2 == selectedRegio2);
+        if (!string.IsNullOrWhiteSpace(selectedRegio3))
+            filtered = filtered.Where(x => x.Regio3 == selectedRegio3);
+
+        totalPages = Math.Max(1, (int)Math.Ceiling((double)filtered.Count() / pageSize));
+        pagedData = filtered.Skip((currentPage - 1) * pageSize).Take(pageSize);
+    }
+
+    private void PrevPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+            UpdatePagedData();
+        }
+    }
+
+    private void NextPage()
+    {
+        if (currentPage < totalPages)
+        {
+            currentPage++;
+            UpdatePagedData();
+        }
+    }
+
+    private void GoToPage(int page)
+    {
+        currentPage = page;
+        UpdatePagedData();
+    }
+
+    private void OnRegio1Changed(ChangeEventArgs e)
+    {
+        selectedRegio1 = e.Value?.ToString();
+        selectedRegio2 = null;
+        selectedRegio3 = null;
+        regio2List = manager.GetRegio2List(selectedRegio1);
+        regio3List = new();
+        currentPage = 1;
+        UpdatePagedData();
+    }
+
+    private void OnRegio2Changed(ChangeEventArgs e)
+    {
+        selectedRegio2 = e.Value?.ToString();
+        selectedRegio3 = null;
+        regio3List = manager.GetRegio3List(selectedRegio1, selectedRegio2);
+        currentPage = 1;
+        UpdatePagedData();
+    }
+
+    private void OnRegio3Changed(ChangeEventArgs e)
+    {
+        selectedRegio3 = e.Value?.ToString();
+        currentPage = 1;
+        UpdatePagedData();
+    }
+}

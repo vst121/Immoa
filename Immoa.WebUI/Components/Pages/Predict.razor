@@ -1,0 +1,159 @@
+@page "/predict"
+@rendermode InteractiveServer
+
+<PageTitle>Predict</PageTitle>
+
+<h1>Predict</h1>
+
+<EditForm Model="@model">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Regio1</label>
+        <select class="form-select" @onchange="OnRegio1Changed">
+            <option value="">All</option>
+            @foreach (var r in regio1List)
+            {
+                <option value="@r">@r</option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Regio2</label>
+        <select class="form-select" @onchange="OnRegio2Changed">
+            <option value="">All</option>
+            @foreach (var r in regio2List)
+            {
+                <option value="@r">@r</option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Regio3</label>
+        <select class="form-select" @onchange="OnRegio3Changed">
+            <option value="">All</option>
+            @foreach (var r in regio3List)
+            {
+                <option value="@r">@r</option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Living Space</label>
+        <InputNumber class="form-control" @bind-Value="model.LivingSpace" />
+    </div>
+    <div class="mb-3">
+        <label>No. of Rooms</label>
+        <select class="form-select" @bind="model.NoRooms">
+            <option value="1">1</option>
+            <option value="1.5">1.5</option>
+            <option value="2">2</option>
+            <option value="2.5">2.5</option>
+            <option value="3">3</option>
+            <option value="3.5">3.5</option>
+            <option value="4">4</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Newly Constructed</label>
+        <InputCheckbox class="form-check-input" @bind-Value="model.NewlyConst" />
+    </div>
+    <div class="mb-3">
+        <label>Balcony</label>
+        <InputCheckbox class="form-check-input" @bind-Value="model.Balcony" />
+    </div>
+    <div class="mb-3">
+        <label>Has Kitchen</label>
+        <InputCheckbox class="form-check-input" @bind-Value="model.HasKitchen" />
+    </div>
+    <div class="mb-3">
+        <label>Cellar</label>
+        <InputCheckbox class="form-check-input" @bind-Value="model.Cellar" />
+    </div>
+    <div class="mb-3">
+        <label>Lift</label>
+        <InputCheckbox class="form-check-input" @bind-Value="model.Lift" />
+    </div>
+    <div class="mb-3">
+        <label>Garden</label>
+        <InputCheckbox class="form-check-input" @bind-Value="model.Garden" />
+    </div>
+
+    <button class="btn btn-primary" @onclick="DoPredict">Predict</button>
+</EditForm>
+
+@if (predictedRentPrice > 0)
+{
+    <hr />
+    <div class="mb-3">
+        <label>Predicted Rent Price:</label>
+        <lable><strong>@predictedRentPrice</strong></lable>
+    </div>
+}
+
+@code {
+    private ImmoItemModelDto model = new();
+    private int predictedRentPrice = 0;
+
+    private List<string> regio1List = new();
+    private List<string> regio2List = new();
+    private List<string> regio3List = new();
+
+    private string? selectedRegio1;
+    private string? selectedRegio2;
+    private string? selectedRegio3;
+
+    private DataManager manager = new();
+
+    protected override void OnInitialized()
+    {
+        regio1List = manager.GetRegio1List();
+        regio2List = manager.GetRegio2List();
+        regio3List = manager.GetRegio3List();
+    }
+
+    private void OnRegio1Changed(ChangeEventArgs e)
+    {
+        selectedRegio1 = e.Value?.ToString();
+        selectedRegio2 = null;
+        selectedRegio3 = null;
+        regio2List = manager.GetRegio2List(selectedRegio1);
+        regio3List = new();
+    }
+
+    private void OnRegio2Changed(ChangeEventArgs e)
+    {
+        selectedRegio2 = e.Value?.ToString();
+        selectedRegio3 = null;
+        regio3List = manager.GetRegio3List(selectedRegio1, selectedRegio2);
+    }
+
+    private void OnRegio3Changed(ChangeEventArgs e)
+    {
+        selectedRegio3 = e.Value?.ToString();
+    }
+
+    private void DoPredict()
+    {
+        if (selectedRegio1 != null)
+        {
+            model.Regio1 = selectedRegio1;
+        }
+
+        if (selectedRegio2 != null)
+        {
+            model.Regio2 = selectedRegio2;
+        }
+
+        if (selectedRegio3 != null)
+        {
+            model.Regio3 = selectedRegio3;
+        }
+
+        var baseRent = ModelUtil.UseModel(model);
+        Console.WriteLine($"Predicted Base Rent: {Convert.ToInt32(baseRent).ToString("n0")}");
+        predictedRentPrice = baseRent;
+
+    }
+}

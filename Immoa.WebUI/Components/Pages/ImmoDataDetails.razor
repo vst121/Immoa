@@ -1,0 +1,78 @@
+@page "/immodata/details/{ScoutId:int}"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Components
+@inject NavigationManager Navigation
+
+<PageTitle>Immo Data Details</PageTitle>
+
+<h1>Immo Data Details</h1>
+
+@if (item == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table table-bordered" width="70%">
+        <tbody>
+            <tr><th>ScoutId</th><td>@item.ScoutId</td></tr>
+            <tr><th>Regio1</th><td>@item.Regio1</td></tr>
+            <tr><th>Regio2</th><td>@item.Regio2</td></tr>
+            <tr><th>Regio3</th><td>@item.Regio3</td></tr>
+            <tr><th>StreetPlain</th><td>@item.StreetPlain</td></tr>
+            <tr><th>HouseNumber</th><td>@item.HouseNumber</td></tr>
+            <tr><th>GeoPlz</th><td>@item.GeoPlz</td></tr>
+            <tr><th>ServiceCharge</th><td>@item.ServiceCharge</td></tr>
+            <tr><th>HeatingType</th><td>@item.HeatingType</td></tr>
+            <tr><th>NewlyConst</th><td>@item.NewlyConst</td></tr>
+            <tr><th>YearConstructed</th><td>@item.YearConstructed</td></tr>
+            <tr><th>YearConstructedRange</th><td>@item.YearConstructedRange</td></tr>
+            <tr><th>LastRefurbish</th><td>@item.LastRefurbish</td></tr>
+            <tr><th>LivingSpace</th><td>@item.LivingSpace</td></tr>
+            <tr><th>LivingSpaceRange</th><td>@item.LivingSpaceRange</td></tr>
+            <tr><th>Balcony</th><td>@item.Balcony</td></tr>
+            <tr><th>Pricetrend</th><td>@item.Pricetrend</td></tr>
+            <tr><th>BaseRent</th><td>@item.BaseRent</td></tr>
+            <tr><th>BaseRentRange</th><td>@item.BaseRentRange</td></tr>
+            <tr><th>TotalRent</th><td>@item.TotalRent</td></tr>
+            <tr><th>NoParkSpaces</th><td>@item.NoParkSpaces</td></tr>
+            <tr><th>FiringTypes</th><td>@item.FiringTypes</td></tr>
+            <tr><th>HasKitchen</th><td>@item.HasKitchen</td></tr>
+            <tr><th>Cellar</th><td>@item.Cellar</td></tr>
+            <tr><th>PetsAllowed</th><td>@item.PetsAllowed</td></tr>
+            <tr><th>Lift</th><td>@item.Lift</td></tr>
+            <tr><th>TypeOfFlat</th><td>@item.TypeOfFlat</td></tr>
+            <tr><th>NoRooms</th><td>@item.NoRooms</td></tr>
+            <tr><th>NoRoomsRange</th><td>@item.NoRoomsRange</td></tr>
+            <tr><th>Floor</th><td>@item.Floor</td></tr>
+            <tr><th>NumberOfFloors</th><td>@item.NumberOfFloors</td></tr>
+            <tr><th>Garden</th><td>@item.Garden</td></tr>
+            <tr><th>ThermalChar</th><td>@item.ThermalChar</td></tr>
+            <tr><th>HeatingCosts</th><td>@item.HeatingCosts</td></tr>
+            <tr><th>EnergyEfficiencyClass</th><td>@item.EnergyEfficiencyClass</td></tr>
+            <tr><th>ElectricityBasePrice</th><td>@item.ElectricityBasePrice</td></tr>
+            <tr><th>Condition</th><td>@item.Condition</td></tr>
+        </tbody>
+    </table>
+    <button class="btn btn-secondary" @onclick="GoBack">Back</button>
+}
+
+@code {
+    [Parameter]
+    public int ScoutId { get; set; }
+
+    private ImmoItemData? item;
+
+    protected override void OnInitialized()
+    {
+        var manager = new DataManager();
+        var allData = manager.LoadAllData().ToList();
+        item = allData.FirstOrDefault(x => x.ScoutId == ScoutId);
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/immodata");
+    }
+}

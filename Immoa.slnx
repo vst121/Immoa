@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="Immoa.Data/Immoa.Data.csproj" Id="93ab5da2-a8be-449b-9c6d-6de831b454f1" />
   <Project Path="Immoa.Running/Immoa.Running.csproj" />
   <Project Path="Immoa.Training/Immoa.Training.csproj" />
+  <Project Path="Immoa.WebUI/Immoa.WebUI.csproj" Id="df247d60-87ab-41e6-9f8c-df9ccc1f4f60" />
 </Solution>

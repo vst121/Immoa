@@ -15,7 +15,7 @@ public class ModelUtil
         MLContext mlContext = new();
 
         ITransformer trainedModel =
-            mlContext.Model.Load("D:\\DotNetProjects10\\Immoa\\Immoa.Running\\bin\\Debug\\net10.0\\ImmoModel.zip",
+            mlContext.Model.Load("D:\\DotNetProjects10\\Immoa\\Immoa.Running\\bin\\Debug\\net10.0\\ImmoaModel.zip",
             out _);
 
         var predictEngine = mlContext.Model.CreatePredictionEngine<ImmoItemModelDto, BaseRentPredict>(trainedModel);
