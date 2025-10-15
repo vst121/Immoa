@@ -132,14 +132,12 @@ else
     private string? selectedRegio2;
     private string? selectedRegio3;
 
-    private DataManager manager = new();
-
     protected override void OnInitialized()
     {
-        allData = manager.LoadAllData().ToList();
-        regio1List = manager.GetRegio1List();
-        regio2List = manager.GetRegio2List();
-        regio3List = manager.GetRegio3List();
+        allData = DataManager.LoadAllData().ToList();
+        regio1List = DataManager.GetRegio1List();
+        regio2List = DataManager.GetRegio2List();
+        regio3List = DataManager.GetRegio3List();
         totalPages = Math.Max(1, (int)Math.Ceiling((double)allData.Count / pageSize));
         UpdatePagedData();
     }
@@ -188,7 +186,7 @@ else
         selectedRegio1 = e.Value?.ToString();
         selectedRegio2 = null;
         selectedRegio3 = null;
-        regio2List = manager.GetRegio2List(selectedRegio1);
+        regio2List = DataManager.GetRegio2List(selectedRegio1);
         regio3List = new();
         currentPage = 1;
         UpdatePagedData();
@@ -198,7 +196,7 @@ else
     {
         selectedRegio2 = e.Value?.ToString();
         selectedRegio3 = null;
-        regio3List = manager.GetRegio3List(selectedRegio1, selectedRegio2);
+        regio3List = DataManager.GetRegio3List(selectedRegio1, selectedRegio2);
         currentPage = 1;
         UpdatePagedData();
     }

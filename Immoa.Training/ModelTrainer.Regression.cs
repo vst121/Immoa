@@ -1,14 +1,12 @@
-using Tensorflow.Contexts;
-
 namespace Immoa.Training;
 
-public class ModelTrainer
+public partial class ModelTrainingService
 {
-    public void Train()
+    public static void TrainRegression()
     {
         var mlContext = new MLContext();
         
-        var data = (new DataManager()).LoadAllData();
+        var data = DataManager.LoadAllData();
         var dataView = mlContext.Data.LoadFromEnumerable(data);
 
         var pipeline = mlContext.Transforms.Categorical
@@ -50,16 +48,16 @@ public class ModelTrainer
         var trainTestData = mlContext.Data.TrainTestSplit(dataView, testFraction: 0.2);
         var model = pipeline.Fit(trainTestData.TrainSet);
 
-        mlContext.Model.Save(model, dataView.Schema, "ImmoaModel.zip");
+        mlContext.Model.Save(model, dataView.Schema, "ImmoaRegressionModel.zip");
 
         var predicts = model.Transform(trainTestData.TestSet);
         var metrics = mlContext.Regression.Evaluate(predicts);
 
-        Console.WriteLine($"Model has been created!");
+        Console.WriteLine($"Model for Regression has been created!");
         Console.WriteLine($"RSquared: {metrics.RSquared:0.##}");
-        Console.WriteLine($"Mean Absolute Error:{metrics.MeanAbsoluteError.ToString("n0")}");
-        Console.WriteLine($"Mean Squared Error: {metrics.MeanSquaredError.ToString("n0")}");
-        Console.WriteLine($"LossFunction: {metrics.LossFunction.ToString("n0")}");
-        Console.WriteLine($"Root Mean Squared Error(RMSE): {metrics.RootMeanSquaredError.ToString("n0")}");
+        Console.WriteLine($"Mean Absolute Error:{metrics.MeanAbsoluteError:n0}");
+        Console.WriteLine($"Mean Squared Error: {metrics.MeanSquaredError:n0}");
+        Console.WriteLine($"LossFunction: {metrics.LossFunction:n0}");
+        Console.WriteLine($"Root Mean Squared Error(RMSE): {metrics.RootMeanSquaredError:n0}");
     }
 }

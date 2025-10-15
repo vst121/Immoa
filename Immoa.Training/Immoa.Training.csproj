@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Immoa.Data\Immoa.Data.csproj" />
+    <ProjectReference Include="..\Immoa.SharedTypes\Immoa.SharedTypes.csproj" />
   </ItemGroup>
 
 </Project>

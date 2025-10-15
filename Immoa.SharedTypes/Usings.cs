@@ -1,5 +1,4 @@
 ﻿global using Microsoft.ML;
-global using Immoa.Running;
-global using Immoa.Training;
+global using Microsoft.ML.Data;
 global using Immoa.SharedTypes.Types;
 

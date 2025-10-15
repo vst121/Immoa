@@ -4,7 +4,7 @@ public class DataManager
 {
     static List<ImmoItemData> allData = new();
 
-    public IEnumerable<ImmoItemData> LoadAllData()
+    public static IEnumerable<ImmoItemData> LoadAllData()
     {
         if (allData.Count() > 0)
         {
@@ -109,7 +109,7 @@ public class DataManager
         return allData;
     }
 
-    public List<string> GetRegio1List()
+    public static List<string> GetRegio1List()
     {
         return LoadAllData()
             .Select(x => x.Regio1)
@@ -119,7 +119,7 @@ public class DataManager
             .ToList();
     }
 
-    public List<string> GetRegio2List(string? regio1 = null)
+    public static List<string> GetRegio2List(string? regio1 = null)
     {
         var data = LoadAllData();
         if (!string.IsNullOrWhiteSpace(regio1))
@@ -133,7 +133,7 @@ public class DataManager
             .ToList();
     }
 
-    public List<string> GetRegio3List(string? regio1 = null, string? regio2 = null)
+    public static List<string> GetRegio3List(string? regio1 = null, string? regio2 = null)
     {
         var data = LoadAllData();
         if (!string.IsNullOrWhiteSpace(regio1))

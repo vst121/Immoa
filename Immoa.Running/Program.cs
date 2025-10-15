@@ -1,18 +1,8 @@
 ﻿
-ModelUtil.TrainModel();
+// Regression
+ModelUtil.TrainRegressionModel();
 
-var dto1 = new ImmoItemModelDto
-{
-    Regio1 = "Hessen",
-    Lift = true,
-    Balcony = true,
-    NoRooms = 4
-};
-
-var baseRent1 = ModelUtil.UseModel(dto1);
-Console.WriteLine($"Predicted Base Rent: {Convert.ToInt32(baseRent1).ToString("n0")}");
-
-var dto2 = new ImmoItemModelDto
+var regData = new ApartmentRegressionData
 {
     Regio1 = "Bayern",
     //GeoPlz = 60438,
@@ -26,9 +16,20 @@ var dto2 = new ImmoItemModelDto
     Garden = true,
 };
 
-var baseRent2 = ModelUtil.UseModel(dto2);
-Console.WriteLine($"Predicted Base Rent: {Convert.ToInt32(baseRent2).ToString("n0")}");
+var regPredictedbaseRent = ModelUtil.UseRegressionModel(regData);
+Console.WriteLine($"Predicted Base Rent: {Convert.ToInt32(regPredictedbaseRent):n0}");
+Console.WriteLine("");
 
+// Classification
+ModelUtil.TrainClassificationModel();
 
-Console.WriteLine("Model run!");
+var clsData = new ApartmentClassificationData
+{
+    Regio1 = "Hessen",
+    NoRooms = 4
+};
+
+var clsPredictedCategory = ModelUtil.UseClassificationModel(clsData);
+Console.WriteLine($"Predicted Category: {clsPredictedCategory}");
+
 Console.ReadLine();

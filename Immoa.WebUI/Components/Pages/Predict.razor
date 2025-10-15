@@ -87,14 +87,22 @@
 {
     <hr />
     <div class="mb-3">
-        <label>Predicted Rent Price:</label>
+        <label><strong>Prediction</strong></label>
+    </div>
+    <div class="mb-3">
+        <label>Rent Price:</label>
         <lable><strong>@predictedRentPrice</strong></lable>
+    </div>
+    <div class="mb-3">
+        <label>Category:</label>
+        <lable><strong>@predictedCategory</strong></lable>
     </div>
 }
 
 @code {
-    private ImmoItemModelDto model = new();
+    private ApartmentRegressionData model = new();
     private int predictedRentPrice = 0;
+    private string predictedCategory = "";
 
     private List<string> regio1List = new();
     private List<string> regio2List = new();
@@ -104,13 +112,11 @@
     private string? selectedRegio2;
     private string? selectedRegio3;
 
-    private DataManager manager = new();
-
     protected override void OnInitialized()
     {
-        regio1List = manager.GetRegio1List();
-        regio2List = manager.GetRegio2List();
-        regio3List = manager.GetRegio3List();
+        regio1List = DataManager.GetRegio1List();
+        regio2List = DataManager.GetRegio2List();
+        regio3List = DataManager.GetRegio3List();
     }
 
     private void OnRegio1Changed(ChangeEventArgs e)
@@ -118,7 +124,7 @@
         selectedRegio1 = e.Value?.ToString();
         selectedRegio2 = null;
         selectedRegio3 = null;
-        regio2List = manager.GetRegio2List(selectedRegio1);
+        regio2List = DataManager.GetRegio2List(selectedRegio1);
         regio3List = new();
     }
 
@@ -126,7 +132,7 @@
     {
         selectedRegio2 = e.Value?.ToString();
         selectedRegio3 = null;
-        regio3List = manager.GetRegio3List(selectedRegio1, selectedRegio2);
+        regio3List = DataManager.GetRegio3List(selectedRegio1, selectedRegio2);
     }
 
     private void OnRegio3Changed(ChangeEventArgs e)
@@ -151,9 +157,17 @@
             model.Regio3 = selectedRegio3;
         }
 
-        var baseRent = ModelUtil.UseModel(model);
-        Console.WriteLine($"Predicted Base Rent: {Convert.ToInt32(baseRent).ToString("n0")}");
-        predictedRentPrice = baseRent;
+        predictedRentPrice = ModelUtil.UseRegressionModel(model);
 
+        var clsModel = new ApartmentClassificationData
+        {
+            Regio1 = model.Regio1,
+            Regio2 = model.Regio2,
+            Regio3 = model.Regio3,
+            LivingSpace = model.LivingSpace,
+            NoRooms = model.NoRooms,
+		};
+
+        predictedCategory = ModelUtil.UseClassificationModel(clsModel);
     }
 }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Immoa.SharedTypes.Types;
 
-namespace Immoa.Running;
-
-public class ImmoItemModelDto
+public class ApartmentRegressionData
 {
     public string Regio1 { get; set; }
     public string Regio2 { get; set; }
@@ -18,4 +14,10 @@ public class ImmoItemModelDto
     public bool Lift { get; set; }
     public bool Garden { get; set; }
     public Single BaseRent { get; set; }
+}
+
+public class ApartmentRegressionPrediction
+{
+    [ColumnName("Score")]
+    public float PredictedBaseRent { get; set; }
 }

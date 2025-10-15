@@ -65,8 +65,7 @@ else
 
     protected override void OnInitialized()
     {
-        var manager = new DataManager();
-        var allData = manager.LoadAllData().ToList();
+        var allData = DataManager.LoadAllData().ToList();
         item = allData.FirstOrDefault(x => x.ScoutId == ScoutId);
     }
 
