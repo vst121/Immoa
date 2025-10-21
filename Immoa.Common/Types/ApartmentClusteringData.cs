@@ -1,6 +1,6 @@
-﻿namespace Immoa.SharedTypes.Types;
+﻿namespace Immoa.Common.Types;
 
-public class ApartmentRegressionData
+public class ApartmentClusteringData 
 {
     public string Regio1 { get; set; }
     public string Regio2 { get; set; }
@@ -14,10 +14,13 @@ public class ApartmentRegressionData
     public bool Lift { get; set; }
     public bool Garden { get; set; }
     public Single BaseRent { get; set; }
+    public int PredictedClusterId { get; set; }
 }
 
-public class ApartmentRegressionPrediction
+public class ApartmentClusteringPrediction
 {
+    [ColumnName("PredictedClusterId")]
+    public int PredictedClusterId { get; set; }
     [ColumnName("Score")]
-    public float PredictedBaseRent { get; set; }
+    public float[] Distances { get; set; }
 }

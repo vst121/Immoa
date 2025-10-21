@@ -65,7 +65,7 @@ else
             <h6>Summary for @selectedRegio1 / @selectedRegio2 / @selectedRegio3</h6>
             @if (finalData != null)
             {
-                <p>Ad Count: @finalData.AdCount</p>
+                <p>Ads Count: @finalData.AdsCount</p>
                 <p>Rent Min Price: @finalData.BaseRentMinPrice</p>
                 <p>Rent Max Price: @finalData.BaseRentMaxPrice</p>
             }
@@ -139,7 +139,7 @@ else
                 Regio1 = selectedRegio1!,
                 Regio2 = selectedRegio2!,
                 Regio3 = regio3,
-                AdCount = filtered.Count(),
+                AdsCount = filtered.Count(),
                 BaseRentMinPrice = filtered.Min(x => x.BaseRent),
                 BaseRentMaxPrice = filtered.Max(x => x.BaseRent)
             };
@@ -155,7 +155,7 @@ else
         public string Regio1 { get; set; } = string.Empty;
         public string Regio2 { get; set; } = string.Empty;
         public string Regio3 { get; set; } = string.Empty;
-        public int AdCount { get; set; }
+        public int AdsCount { get; set; }
         public float BaseRentMinPrice { get; set; }
         public float BaseRentMaxPrice { get; set; }
     }

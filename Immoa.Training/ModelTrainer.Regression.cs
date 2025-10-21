@@ -11,38 +11,38 @@ public partial class ModelTrainingService
 
         var pipeline = mlContext.Transforms.Categorical
             .OneHotEncoding(
-                $"{nameof(ImmoItemData.Regio1)}Encoded", nameof(ImmoItemData.Regio1))
+                $"{nameof(ApartmentRegressionData.Regio1)}Encoded", nameof(ApartmentRegressionData.Regio1))
             .Append(mlContext.Transforms.Categorical.OneHotEncoding(
-                $"{nameof(ImmoItemData.Regio2)}Encoded", nameof(ImmoItemData.Regio2)))
+                $"{nameof(ApartmentRegressionData.Regio2)}Encoded", nameof(ApartmentRegressionData.Regio2)))
             .Append(mlContext.Transforms.Categorical.OneHotEncoding(
-                $"{nameof(ImmoItemData.Regio3)}Encoded", nameof(ImmoItemData.Regio3)))
-            .Append(mlContext.Transforms.NormalizeMinMax($"{nameof(ImmoItemData.LivingSpace)}Normalized", nameof(ImmoItemData.LivingSpace)))
-            .Append(mlContext.Transforms.NormalizeMinMax($"{nameof(ImmoItemData.NoRooms)}Normalized", nameof(ImmoItemData.NoRooms)))
+                $"{nameof(ApartmentRegressionData.Regio3)}Encoded", nameof(ApartmentRegressionData.Regio3)))
+            .Append(mlContext.Transforms.NormalizeMinMax($"{nameof(ApartmentRegressionData.LivingSpace)}Normalized", nameof(ApartmentRegressionData.LivingSpace)))
+            .Append(mlContext.Transforms.NormalizeMinMax($"{nameof(ApartmentRegressionData.NoRooms)}Normalized", nameof(ApartmentRegressionData.NoRooms)))
             .Append(mlContext.Transforms.Conversion
-                .ConvertType($"{nameof(ImmoItemData.NewlyConst)}Converted", nameof(ImmoItemData.NewlyConst), outputKind: Microsoft.ML.Data.DataKind.Single))
+                .ConvertType($"{nameof(ApartmentRegressionData.NewlyConst)}Converted", nameof(ApartmentRegressionData.NewlyConst), outputKind: Microsoft.ML.Data.DataKind.Single))
             .Append(mlContext.Transforms.Conversion
-                .ConvertType($"{nameof(ImmoItemData.Balcony)}Converted", nameof(ImmoItemData.Balcony), outputKind: Microsoft.ML.Data.DataKind.Single))
+                .ConvertType($"{nameof(ApartmentRegressionData.Balcony)}Converted", nameof(ApartmentRegressionData.Balcony), outputKind: Microsoft.ML.Data.DataKind.Single))
             .Append(mlContext.Transforms.Conversion
-                .ConvertType($"{nameof(ImmoItemData.HasKitchen)}Converted", nameof(ImmoItemData.HasKitchen), outputKind: Microsoft.ML.Data.DataKind.Single))
+                .ConvertType($"{nameof(ApartmentRegressionData.HasKitchen)}Converted", nameof(ApartmentRegressionData.HasKitchen), outputKind: Microsoft.ML.Data.DataKind.Single))
             .Append(mlContext.Transforms.Conversion
-                .ConvertType($"{nameof(ImmoItemData.Cellar)}Converted", nameof(ImmoItemData.Cellar), outputKind: Microsoft.ML.Data.DataKind.Single))
+                .ConvertType($"{nameof(ApartmentRegressionData.Cellar)}Converted", nameof(ApartmentRegressionData.Cellar), outputKind: Microsoft.ML.Data.DataKind.Single))
             .Append(mlContext.Transforms.Conversion
-                .ConvertType($"{nameof(ImmoItemData.Garden)}Converted", nameof(ImmoItemData.Garden), outputKind: Microsoft.ML.Data.DataKind.Single))
+                .ConvertType($"{nameof(ApartmentRegressionData.Garden)}Converted", nameof(ApartmentRegressionData.Garden), outputKind: Microsoft.ML.Data.DataKind.Single))
 
             .Append(mlContext.Transforms.Concatenate("Features",
-                $"{nameof(ImmoItemData.Regio1)}Encoded",
-                $"{nameof(ImmoItemData.Regio2)}Encoded",
-                $"{nameof(ImmoItemData.Regio3)}Encoded",
-                $"{nameof(ImmoItemData.LivingSpace)}Normalized",
-                $"{nameof(ImmoItemData.NoRooms)}Normalized",
-                $"{nameof(ImmoItemData.NewlyConst)}Converted",
-                $"{nameof(ImmoItemData.Balcony)}Converted",
-                $"{nameof(ImmoItemData.HasKitchen)}Converted",
-                $"{nameof(ImmoItemData.Cellar)}Converted",
-                $"{nameof(ImmoItemData.Garden)}Converted"
+                $"{nameof(ApartmentRegressionData.Regio1)}Encoded",
+                $"{nameof(ApartmentRegressionData.Regio2)}Encoded",
+                $"{nameof(ApartmentRegressionData.Regio3)}Encoded",
+                $"{nameof(ApartmentRegressionData.LivingSpace)}Normalized",
+                $"{nameof(ApartmentRegressionData.NoRooms)}Normalized",
+                $"{nameof(ApartmentRegressionData.NewlyConst)}Converted",
+                $"{nameof(ApartmentRegressionData.Balcony)}Converted",
+                $"{nameof(ApartmentRegressionData.HasKitchen)}Converted",
+                $"{nameof(ApartmentRegressionData.Cellar)}Converted",
+                $"{nameof(ApartmentRegressionData.Garden)}Converted"
             ))
 
-            .Append(mlContext.Transforms.CopyColumns("Label", nameof(ImmoItemData.BaseRent)))
+            .Append(mlContext.Transforms.CopyColumns("Label", nameof(ApartmentRegressionData.BaseRent)))
             .Append(mlContext.Regression.Trainers.FastTree());
 
         var trainTestData = mlContext.Data.TrainTestSplit(dataView, testFraction: 0.2);

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Immoa.SharedTypes\Immoa.SharedTypes.csproj" />
+    <ProjectReference Include="..\Immoa.Common\Immoa.Common.csproj" />
     <ProjectReference Include="..\Immoa.Training\Immoa.Training.csproj" />
   </ItemGroup>
 

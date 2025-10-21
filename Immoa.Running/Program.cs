@@ -31,5 +31,19 @@ var clsData = new ApartmentClassificationData
 
 var clsPredictedCategory = ModelUtil.UseClassificationModel(clsData);
 Console.WriteLine($"Predicted Category: {clsPredictedCategory}");
+Console.WriteLine("");
+
+// Clustering
+ModelUtil.TrainClusteringModel();
+
+var cluData = new ApartmentClusteringData
+{
+    Regio1 = "Hessen",
+    NoRooms = 4
+};
+
+var cluPredictedClusterId = ModelUtil.UseClusteringModel(cluData);
+Console.WriteLine($"Predicted Cluster: {cluPredictedClusterId}");
+Console.WriteLine("");
 
 Console.ReadLine();

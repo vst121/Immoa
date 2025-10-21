@@ -34,19 +34,35 @@ public partial class ModelTrainingService
 
         var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label", nameof(ApartmentClassificationData.Category))
             .Append(mlContext.Transforms.Categorical.OneHotEncoding(
-                $"{nameof(ImmoItemData.Regio1)}Encoded", nameof(ImmoItemData.Regio1)))
+                $"{nameof(ApartmentClassificationData.Regio1)}Encoded", nameof(ApartmentClassificationData.Regio1)))
             .Append(mlContext.Transforms.Categorical.OneHotEncoding(
-                $"{nameof(ImmoItemData.Regio2)}Encoded", nameof(ImmoItemData.Regio2)))
+                $"{nameof(ApartmentClassificationData.Regio2)}Encoded", nameof(ApartmentClassificationData.Regio2)))
             .Append(mlContext.Transforms.Categorical.OneHotEncoding(
-                $"{nameof(ImmoItemData.Regio3)}Encoded", nameof(ImmoItemData.Regio3)))
-            .Append(mlContext.Transforms.NormalizeMinMax($"{nameof(ImmoItemData.LivingSpace)}Normalized", nameof(ImmoItemData.LivingSpace)))
-            .Append(mlContext.Transforms.NormalizeMinMax($"{nameof(ImmoItemData.NoRooms)}Normalized", nameof(ImmoItemData.NoRooms)))
+                $"{nameof(ApartmentClassificationData.Regio3)}Encoded", nameof(ApartmentClassificationData.Regio3)))
+            .Append(mlContext.Transforms.NormalizeMinMax($"{nameof(ApartmentClassificationData.LivingSpace)}Normalized", nameof(ApartmentClassificationData.LivingSpace)))
+            .Append(mlContext.Transforms.NormalizeMinMax($"{nameof(ApartmentClassificationData.NoRooms)}Normalized", nameof(ApartmentClassificationData.NoRooms)))
+            .Append(mlContext.Transforms.Conversion
+                .ConvertType($"{nameof(ApartmentClassificationData.NewlyConst)}Converted", nameof(ApartmentClassificationData.NewlyConst), outputKind: Microsoft.ML.Data.DataKind.Single))
+            .Append(mlContext.Transforms.Conversion
+                .ConvertType($"{nameof(ApartmentClassificationData.Balcony)}Converted", nameof(ApartmentClassificationData.Balcony), outputKind: Microsoft.ML.Data.DataKind.Single))
+            .Append(mlContext.Transforms.Conversion
+                .ConvertType($"{nameof(ApartmentClassificationData.HasKitchen)}Converted", nameof(ApartmentClassificationData.HasKitchen), outputKind: Microsoft.ML.Data.DataKind.Single))
+            .Append(mlContext.Transforms.Conversion
+                .ConvertType($"{nameof(ApartmentClassificationData.Cellar)}Converted", nameof(ApartmentClassificationData.Cellar), outputKind: Microsoft.ML.Data.DataKind.Single))
+            .Append(mlContext.Transforms.Conversion
+                .ConvertType($"{nameof(ApartmentClassificationData.Garden)}Converted", nameof(ApartmentClassificationData.Garden), outputKind: Microsoft.ML.Data.DataKind.Single))
+
             .Append(mlContext.Transforms.Concatenate("Features",
-                $"{nameof(ImmoItemData.Regio1)}Encoded",
-                $"{nameof(ImmoItemData.Regio2)}Encoded",
-                $"{nameof(ImmoItemData.Regio3)}Encoded",
-                $"{nameof(ImmoItemData.LivingSpace)}Normalized",
-                $"{nameof(ImmoItemData.NoRooms)}Normalized"
+                $"{nameof(ApartmentClassificationData.Regio1)}Encoded",
+                $"{nameof(ApartmentClassificationData.Regio2)}Encoded",
+                $"{nameof(ApartmentClassificationData.Regio3)}Encoded",
+                $"{nameof(ApartmentClassificationData.LivingSpace)}Normalized",
+                $"{nameof(ApartmentClassificationData.NoRooms)}Normalized",
+                $"{nameof(ApartmentClassificationData.NewlyConst)}Converted",
+                $"{nameof(ApartmentClassificationData.Balcony)}Converted",
+                $"{nameof(ApartmentClassificationData.HasKitchen)}Converted",
+                $"{nameof(ApartmentClassificationData.Cellar)}Converted",
+                $"{nameof(ApartmentClassificationData.Garden)}Converted"
             ))
             //.Append(mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy("Label", "Features"))
             .Append(mlContext.MulticlassClassification.Trainers.LightGbm("Label", "Features"))
