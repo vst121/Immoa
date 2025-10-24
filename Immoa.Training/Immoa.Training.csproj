@@ -16,7 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Immoa.Common\Immoa.Common.csproj" />
     <ProjectReference Include="..\Immoa.Data\Immoa.Data.csproj" />
-    <ProjectReference Include="..\Immoa.SharedTypes\Immoa.Common.csproj" />
   </ItemGroup>
 
 </Project>
