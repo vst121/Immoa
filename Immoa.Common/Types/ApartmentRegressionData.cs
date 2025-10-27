@@ -5,7 +5,7 @@ public class ApartmentRegressionData
     public string Regio1 { get; set; }
     public string Regio2 { get; set; }
     public string Regio3 { get; set; }
-    public Single LivingSpace { get; set; }
+    public Single LivingSpace { get; set; } = 80;
     public Single NoRooms { get; set; }
     public bool NewlyConst { get; set; }
     public bool Balcony { get; set; }
